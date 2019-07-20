@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.music.R;
+import com.example.music.utils.UserUtils;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,13 +26,19 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     private void init() {
+       final boolean isLogin = UserUtils.validateUserLogin(this);
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Log.e("WelcomeActivity","当前线程为：" + Thread.currentThread());
+               // Log.e("WelcomeActivity","当前线程为：" + Thread.currentThread());
                 //toMain();
                 toLogin();
+                if (isLogin){
+                    toMain();
+                }else {
+                    toLogin();
+                }
             }
         },3*1000);
 

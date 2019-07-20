@@ -27,7 +27,7 @@ public class RealmHelp {
     public void saveUser(UserModel userModel){
         mRealm.beginTransaction();
         mRealm.insert(userModel);
-        //  mRealm.insertOrUpdate(userModel);
+       // mRealm.insertOrUpdate(userModel);
         mRealm.commitTransaction();
     }
     /**
@@ -38,4 +38,38 @@ public class RealmHelp {
         RealmResults<UserModel> results = query.findAll();
         return results;
     }
+    /**
+     * 验证用户信息
+     */
+    public boolean validateUser (String phone,String password){
+        boolean result = false;
+        RealmQuery<UserModel>query = mRealm.where(UserModel.class);
+        query = query.equalTo("phone",phone)
+                .equalTo("password",password);
+        UserModel userModel = query.findFirst();
+
+        if (userModel != null){
+            return true;
+        }
+        return result;
+    }
+    /**
+     * 获取当前用户
+     */
+    public UserModel getUser(){
+        RealmQuery<UserModel> query = mRealm.where(UserModel.class);
+        UserModel userModel = query.equalTo("phone",UserHelp.getInstance().getPhone()).findFirst();
+        return userModel;
+    }
+
+    /**
+     * 修改密码
+     */
+    public void changePassword (String password) {
+        UserModel userModel = getUser();
+        mRealm.beginTransaction();
+        userModel.setPassword(password);
+        mRealm.commitTransaction();
+    }
+
 }
